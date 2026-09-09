@@ -1,0 +1,2 @@
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<jsp:include page="/WEB-INF/views/fragments/header.jsp"><jsp:param name="title" value="Sản phẩm"/></jsp:include><div class="card card-body"><h2>${product.productName}</h2><p>${product.description}</p><p>Danh mục: ${product.category.categoryname}</p><h4>${product.price} VNĐ</h4><p>Tồn kho: ${product.stock}</p></div><jsp:include page="/WEB-INF/views/fragments/footer.jsp"/>
