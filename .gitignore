@@ -1,40 +1,34 @@
-HELP.md
+# Build & Target
 target/
-!.mvn/wrapper/maven-wrapper.jar
-!**/src/main/**/target/
-!**/src/test/**/target/
+build/
+*.war
+*.jar
+*.ear
 
-### STS ###
-.apt_generated
+# Maven
+.m2/
+.mvn/
+
+# IDE & Config
+.idea/
+.vscode/
+.settings/
 .classpath
-.factorypath
 .project
-.settings
+.factorypath
 .springBeans
 .sts4-cache
 
-### IntelliJ IDEA ###
-.idea
-*.iws
-*.iml
-*.ipr
-
-### NetBeans ###
-/nbproject/private/
-/nbbuild/
-/dist/
-/nbdist/
-/.nb-gradle/
-build/
-!**/src/main/**/build/
-!**/src/test/**/build/
-
-### VS Code ###
-.vscode/
-
-### Custom/Project specific ###
-*.log
+# Agent & Temporary / Output files
+.agents/
 uploads/
-*.war
-*.jar
-*.m2/
+*.log
+cookie.txt
+cookies.txt
+home_res.txt
+login_res.txt
+login.html
+
+# OS metadata
+.DS_Store
+Thumbs.db

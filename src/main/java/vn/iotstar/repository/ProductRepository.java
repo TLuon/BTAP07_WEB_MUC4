@@ -6,5 +6,8 @@ import vn.iotstar.entity.Product;
 public interface ProductRepository extends JpaRepository<Product, Integer> {
     Page<Product> findByProductNameContainingIgnoreCaseAndStatus(String keyword, int status, Pageable pageable);
     Page<Product> findByProductNameContainingIgnoreCase(String keyword, Pageable pageable);
+    Page<Product> findByProductNameContaining(String name, Pageable pageable);
+    Page<Product> findByProductNameContainingIgnoreCaseAndCategory_CategoryId(String productName, Integer categoryId, Pageable pageable);
+    Page<Product> findByCategory_CategoryId(Integer categoryId, Pageable pageable);
     long countByCategory_CategoryId(int categoryId);
 }

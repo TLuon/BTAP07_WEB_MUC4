@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+    <div th:fragment="header" class="header-bg py-3 mb-4">
+        <div class="container">
+            <div class="d-flex justify-content-between align-items-center">
+                <div class="d-flex align-items-center gap-3">
+                    <img src="/images/Screenshot 2026-09-10 081116.png" alt="Profile" class="profile-img">
+                    <h4 class="mb-0 fw-bold">Admin Dashboard</h4>
+                </div>
+                <nav>
+                    <ul class="nav">
+                        <li class="nav-item">
+                            <a class="nav-link text-white fw-semibold" href="/th/admin/categories"><i class="fas fa-list me-1"></i> Quản lý Category</a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

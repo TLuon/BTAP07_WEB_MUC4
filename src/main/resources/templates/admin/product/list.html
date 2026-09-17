@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}">
+<head>
+    <title>Danh sách Sản phẩm</title>
+</head>
+<body>
+    <div layout:fragment="content">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2 class="h4 mb-0 text-gray-800"><i class="fas fa-box-open text-primary me-2"></i> Danh sách Sản phẩm</h2>
+            <a href="/th/admin/products/add" class="btn btn-primary shadow-sm">
+                <i class="fas fa-plus fa-sm text-white-50 me-1"></i> Thêm mới
+            </a>
+        </div>
+
+        <!-- Thông báo -->
+        <div th:if="${message != null}" class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="fas fa-check-circle me-1"></i>
+            <span th:text="${message}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        <div th:if="${error != null}" class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="fas fa-exclamation-triangle me-1"></i>
+            <span th:text="${error}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+
+        <div class="card shadow mb-4">
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h6 class="m-0 font-weight-bold text-primary">Bộ lọc tìm kiếm</h6>
+            </div>
+            <div class="card-body">
+                <form action="/th/admin/products" method="get" class="row g-3">
+                    <div class="col-md-6">
+                        <div class="input-group">
+                            <input type="text" class="form-control" name="name" th:value="${name}" placeholder="Nhập tên sản phẩm cần tìm...">
+                            <button class="btn btn-outline-primary" type="submit">
+                                <i class="fas fa-search"></i> Tìm
+                            </button>
+                            <a href="/th/admin/products" class="btn btn-outline-secondary">
+                                Xóa lọc
+                            </a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="card shadow mb-4">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th width="5%">ID</th>
+                                <th width="15%">Hình ảnh</th>
+                                <th width="20%">Tên Sản phẩm</th>
+                                <th width="15%">Danh mục</th>
+                                <th width="10%">Giá</th>
+                                <th width="10%">Tồn kho</th>
+                                <th width="10%">Trạng thái</th>
+                                <th width="15%" class="text-center">Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="product : ${productPage.content}">
+                                <td th:text="${product.productId}">1</td>
+                                <td>
+                                    <img th:if="${product.productImages != null && !product.productImages.isEmpty()}" 
+                                         th:src="@{'/uploads/' + ${product.productImages[0].imagePath}}" 
+                                         alt="Product Image" 
+                                         style="height: 50px; width: 50px; object-fit: cover; border-radius: 8px;"
+                                         onerror="this.outerHTML='<span class=\'badge bg-light text-muted border p-3\'><i class=\'fas fa-image fa-lg\'></i></span>'"/>
+                                    <span th:unless="${product.productImages != null && !product.productImages.isEmpty()}" class="badge bg-light text-muted border p-3"><i class="fas fa-image fa-lg"></i></span>
+                                </td>
+                                <td class="fw-semibold text-dark" th:text="${product.productName}">Tên sản phẩm</td>
+                                <td th:text="${product.category != null ? product.category.categoryname : 'N/A'}">Danh mục</td>
+                                <td th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT')} + ' VNĐ'">Giá</td>
+                                <td th:text="${product.stock}">0</td>
+                                <td>
+                                    <span th:if="${product.status == 1}" class="badge bg-success rounded-pill px-3">Còn hàng</span>
+                                    <span th:unless="${product.status == 1}" class="badge bg-danger rounded-pill px-3">Hết hàng</span>
+                                </td>
+                                <td class="text-center">
+                                    <a th:href="@{'/th/admin/products/edit/' + ${product.productId}}" class="btn btn-sm btn-info text-white me-1 mb-1">
+                                        <i class="fas fa-edit"></i> Sửa
+                                    </a>
+                                    <a href="javascript:void(0);" th:onclick="'confirmDelete(' + ${product.productId} + ')'" class="btn btn-sm btn-danger mb-1">
+                                        <i class="fas fa-trash-alt"></i> Xóa
+                                    </a>
+                                </td>
+                            </tr>
+                            <tr th:if="${productPage.totalElements == 0}">
+                                <td colspan="8" class="text-center py-4 text-muted">
+                                    <i class="fas fa-box-open fa-3x mb-3 d-block"></i>
+                                    Không có dữ liệu
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Phân trang -->
+                <div class="d-flex justify-content-between align-items-center mt-4" th:if="${productPage.totalPages > 0}">
+                    <div class="text-muted small">
+                        Hiển thị <span class="fw-bold" th:text="${productPage.numberOfElements}"></span> / <span class="fw-bold" th:text="${productPage.totalElements}"></span> kết quả
+                    </div>
+                    <nav aria-label="Page navigation">
+                        <ul class="pagination pagination-sm mb-0">
+                            <!-- Nút Prev -->
+                            <li class="page-item" th:classappend="${productPage.first ? 'disabled' : ''}">
+                                <a class="page-link" th:href="@{/th/admin/products(name=${name}, page=${productPage.number})}" aria-label="Previous">
+                                    <span aria-hidden="true">&laquo;</span>
+                                </a>
+                            </li>
+                            <!-- Số trang -->
+                            <li th:each="pageNumber : ${pageNumbers}" class="page-item" th:classappend="${pageNumber == productPage.number + 1 ? 'active' : ''}">
+                                <a class="page-link" th:href="@{/th/admin/products(name=${name}, page=${pageNumber})}" th:text="${pageNumber}">1</a>
+                            </li>
+                            <!-- Nút Next -->
+                            <li class="page-item" th:classappend="${productPage.last ? 'disabled' : ''}">
+                                <a class="page-link" th:href="@{/th/admin/products(name=${name}, page=${productPage.number + 2})}" aria-label="Next">
+                                    <span aria-hidden="true">&raquo;</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            function confirmDelete(id) {
+                Swal.fire({
+                    title: 'Bạn có chắc chắn?',
+                    text: "Dữ liệu sau khi xóa sẽ không thể khôi phục!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#6c757d',
+                    confirmButtonText: 'Vâng, xóa nó!',
+                    cancelButtonText: 'Hủy'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.href = '/th/admin/products/delete/' + id;
+                    }
+                })
+            }
+        </script>
+    </div>
+</body>
+</html>

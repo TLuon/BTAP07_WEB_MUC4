@@ -1,7 +1,10 @@
 package vn.iotstar.entity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -25,11 +28,15 @@ public class Product implements Serializable {
     private String description;
     private double price;
     private int stock;
-    private String images;
+    
+    @jakarta.persistence.OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true, fetch = jakarta.persistence.FetchType.EAGER)
+    private List<ProductImage> productImages = new ArrayList<>();
+    
     private int status;
 
     @ManyToOne
     @JoinColumn(name="categoryId")
+    @com.fasterxml.jackson.annotation.JsonIgnoreProperties({"products", "videos"})
     private Category category;
 
     public Product() {
@@ -75,12 +82,12 @@ public class Product implements Serializable {
         this.stock = stock;
     }
 
-    public String getImages() {
-        return images;
+    public List<ProductImage> getProductImages() {
+        return productImages;
     }
 
-    public void setImages(String images) {
-        this.images = images;
+    public void setProductImages(List<ProductImage> productImages) {
+        this.productImages = productImages;
     }
 
     public int getStatus() {

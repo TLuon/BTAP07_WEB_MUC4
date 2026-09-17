@@ -11,9 +11,11 @@ import jakarta.servlet.DispatcherType;
 public class SecurityConfig {
  @Bean PasswordEncoder passwordEncoder(){ return new BCryptPasswordEncoder(); }
  @Bean SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-  return http.authorizeHttpRequests(a -> a
+  return http
+    .csrf(csrf -> csrf.ignoringRequestMatchers("/api/**"))
+    .authorizeHttpRequests(a -> a
     .dispatcherTypeMatchers(DispatcherType.FORWARD, DispatcherType.ERROR).permitAll()
-    .requestMatchers("/", "/home", "/products/**", "/login", "/register/**", "/forgot/**", "/reset/**", "/uploads/**", "/css/**").permitAll()
+    .requestMatchers("/admin/categories/ajax", "/admin/products/ajax", "/api/**", "/", "/home", "/products/**", "/login", "/register/**", "/forgot/**", "/reset/**", "/uploads/**", "/css/**").permitAll()
     .requestMatchers("/admin/**").hasRole("ADMIN")
     .anyRequest().authenticated())
    .formLogin(f -> f.loginPage("/login").loginProcessingUrl("/login").usernameParameter("email").passwordParameter("password").defaultSuccessUrl("/", true).failureUrl("/login?error=true").permitAll())

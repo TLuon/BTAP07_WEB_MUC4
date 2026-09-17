@@ -34,10 +34,12 @@ public class Category implements Serializable {
 
     // bi-directional many-to-one association to Video
     @OneToMany(mappedBy="categories")
+    @com.fasterxml.jackson.annotation.JsonIgnore
     private List<Video> videos;
 
     // bi-directional many-to-one association to Product
     @OneToMany(mappedBy="category")
+    @com.fasterxml.jackson.annotation.JsonIgnore
     private List<Product> products;
 
     public Category() {
